@@ -5,7 +5,7 @@ var config = {
       type: "default",
       options: {  
         userName: "sa",
-        password: "M@$t3rk3yRM",
+        password: "masterkey",
       }
     }
   };
