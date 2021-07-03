@@ -1,5 +1,5 @@
 import { Connection } from 'tedious';
-import Config from './config';
+import Config from './Config';
 
 var connection = new Connection(Config);
 connection.on('connect', (err) => {

@@ -1,4 +1,4 @@
-import Connection from '../../data/index'
+import Connection from '../../data/Index'
 import { Request, Response} from 'express';
 const Tedious = require('tedious');
 const TediousRequest = Tedious.Request;
