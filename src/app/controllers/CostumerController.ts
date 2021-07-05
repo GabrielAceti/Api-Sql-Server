@@ -1,5 +1,7 @@
 import Connection from '../../data/Index'
 import { Request, Response} from 'express';
+import Costumer from '../models/Costumer'
+
 const Tedious = require('tedious');
 const TediousRequest = Tedious.Request;
 
@@ -19,25 +21,34 @@ class CostumerController {
         Connection.execSql(request);
     } 
     
-    async get(req: Request, res: Response){
-        
-        let request = await new TediousRequest("USE ALTF_ERP SELECT * FROM FCFO", (err: any, rowCount: any) =>{
+     get(req: Request, res: Response){
+
+        var row: String[] = [];
+        var costumers: Costumer[] = [];
+
+        let request =  new TediousRequest("USE ALTF_ERP SELECT * FROM FCFO", (err: any, rowCount: any) =>{
             if(err){
                 return res.status(400).json(err);
             }
-            else{
-                return res.status(200).json();
+            else{                
+                return res.status(200).json(costumers);
             }
         });  
-
+        
+        
         request.on('row', function(columns: any[]) {
+
+            row.length = 0;
             columns.forEach(function(column: { value: any; }) {
-              console.log(column.value);
+              row.push(column.value);              
             });
-          });
-        
-          Connection.execSql(request);
-        
+
+            const costumer = new Costumer(new Date(row[0].toString()) , row[1], row[2], row[3], row[4], row[5], row[6])
+            costumers.push(costumer);
+            
+          });       
+
+          Connection.execSql(request);          
     }    
     
 }
