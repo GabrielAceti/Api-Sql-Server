@@ -6,5 +6,6 @@ const _CostumerController = new CostumerController;
 Routes.get('/costumer', _CostumerController.get);
 Routes.post('/costumer', _CostumerController.create);
 Routes.put('/costumer/:_id', _CostumerController.put);
+Routes.delete('/costumer/:_id', _CostumerController.delete);
 
 export default Routes;

@@ -16,7 +16,7 @@ class CostumerController {
                 return res.status(400).json(err);
             }
             else{
-                return res.status(200).json("Sucesso");
+                return res.status(200).json("Sucessful");
             }
         });    
         
@@ -59,14 +59,29 @@ class CostumerController {
 
          let request = new TediousRequest(`USE ALTF_ERP UPDATE FCFO SET NOME = '${name}', NOMEFANTASIA = '${fantasyName}', RUA = '${address}', TELEFONE1 = '${telephone}', OBSERVACAO = '${observation}', TIPO = '${type}' WHERE IDFCFO = ${_id}`, (err: Error, rowCount: Number) => {
              if(err){
-                 res.status(400).json(err);
+                 return res.status(400).json(err);
              }
              else{
-                 res.status(200).json("Sucesso");
+                 return res.status(200).json("Sucessful");
              }
          });
          
          Connection.execSql(request);
+    }
+
+    delete(req: Request, res: Response){
+        const { _id } = req.params;
+
+        let request = new TediousRequest(`USE ALTF_ERP DELETE FCFO WHERE IDFCFO = ${_id}`, (err: Error, rowCount: Number) => {
+            if(err){
+                return res.status(400).json(err);
+            }
+            else{
+                return res.status(200).json("Sucessful")
+            }
+        });
+
+        Connection.execSql(request);
     }
     
 }
