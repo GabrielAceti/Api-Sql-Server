@@ -7,9 +7,11 @@ const TediousRequest = Tedious.Request;
 
 class CostumerController {
 
-       async create(req: Request, res: Response){
+        create(req: Request, res: Response){
+
         const {date, name, fantasyName, address, telephone, observation, type} = req.body;
-        let request = await new TediousRequest(`USE ALTF_ERP INSERT INTO FCFO(DATAINCLUSAO, NOME, NOMEFANTASIA, RUA, TELEFONE1, OBSERVACAO, TIPO) VALUES('${date}', '${name}', '${fantasyName}', '${address}', '${telephone}', '${observation}', '${type}')`, (err: any, rowCount: any) =>{
+
+        let request =  new TediousRequest(`USE ALTF_ERP INSERT INTO FCFO(DATAINCLUSAO, NOME, NOMEFANTASIA, RUA, TELEFONE1, OBSERVACAO, TIPO) VALUES('${date}', '${name}', '${fantasyName}', '${address}', '${telephone}', '${observation}', '${type}')`, (err: any, rowCount: any) =>{
             if(err){
                 return res.status(400).json(err);
             }
@@ -49,7 +51,23 @@ class CostumerController {
           });       
 
           Connection.execSql(request);          
-    }    
+    } 
+    
+    put(req: Request, res: Response){
+         const {date, name, fantasyName, address, telephone, observation, type} = req.body;
+         const { _id } = req.params;
+
+         let request = new TediousRequest(`USE ALTF_ERP UPDATE FCFO SET NOME = '${name}', NOMEFANTASIA = '${fantasyName}', RUA = '${address}', TELEFONE1 = '${telephone}', OBSERVACAO = '${observation}', TIPO = '${type}' WHERE IDFCFO = ${_id}`, (err: Error, rowCount: Number) => {
+             if(err){
+                 res.status(400).json(err);
+             }
+             else{
+                 res.status(200).json("Sucesso");
+             }
+         });
+         
+         Connection.execSql(request);
+    }
     
 }
 
