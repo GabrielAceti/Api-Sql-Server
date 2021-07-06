@@ -8,10 +8,12 @@ const TediousRequest = Tedious.Request;
 class CostumerController {
 
     create(req: Request, res: Response) {
+        const date = new Date();
+        const inclusionDate = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
+        const { name, address, telephone, observation } = req.body;
+        
 
-        const { date, name, fantasyName, address, telephone, observation, type } = req.body;
-
-        let request = new TediousRequest(`USE ALTF_ERP INSERT INTO FCFO(DATAINCLUSAO, NOME, NOMEFANTASIA, RUA, TELEFONE1, OBSERVACAO, TIPO) VALUES('${date}', '${name}', '${fantasyName}', '${address}', '${telephone}', '${observation}', '${type}')`, (err: any, rowCount: any) => {
+        let request = new TediousRequest(`INSERT INTO COSTUMERS(INCLUSIONDATE, NAME, ADDRESS, TELEPHONE, OBSERVATION) VALUES('${inclusionDate}', '${name}', '${address}', '${telephone}', '${observation}')`, (err: any, rowCount: any) => {
             if (err) {
                 return res.status(400).json(err);
             }
@@ -28,7 +30,7 @@ class CostumerController {
         var row: String[] = [];
         var costumers: Costumer[] = [];
 
-        let request = new TediousRequest("USE ALTF_ERP SELECT * FROM FCFO", (err: any, rowCount: any) => {
+        let request = new TediousRequest("SELECT * FROM COSTUMERS", (err: any, rowCount: any) => {
             if (err) {
                 return res.status(400).json(err);
             }
@@ -45,7 +47,7 @@ class CostumerController {
                 row.push(column.value);
             });
 
-            const costumer = new Costumer(new Date(row[0].toString()), row[1], row[2], row[3], row[4], row[5], row[6])
+            const costumer = new Costumer(new Date(row[0].toString()), row[1], row[2], row[3], row[4])
             costumers.push(costumer);
 
         });
@@ -59,7 +61,7 @@ class CostumerController {
         var row: String[] = [];
         var costumer: Costumer[] = [];
 
-        let request = new TediousRequest(`USE ALTF_ERP SELECT * FROM FCFO WHERE IDFCFO = ${_id}`, (err: any, rowCount: Number) => {
+        let request = new TediousRequest(` SELECT * FROM COSTUMERS WHERE ID = ${_id}`, (err: any, rowCount: Number) => {
 
             if (err) {
                 return res.status(400).json(err);
@@ -75,17 +77,17 @@ class CostumerController {
                 row.push(column.value);
             });
 
-            costumer.push(new Costumer(new Date(row[0].toString()), row[1], row[2], row[3], row[4], row[5], row[6]));
+            costumer.push(new Costumer(new Date(row[0].toString()), row[1], row[2], row[3], row[4]));
         });
 
         Connection.execSql(request);
     }
 
     put(req: Request, res: Response) {
-        const { date, name, fantasyName, address, telephone, observation, type } = req.body;
+        const { date, name, address, telephone, observation} = req.body;
         const { _id } = req.params;
 
-        let request = new TediousRequest(`USE ALTF_ERP UPDATE FCFO SET NOME = '${name}', NOMEFANTASIA = '${fantasyName}', RUA = '${address}', TELEFONE1 = '${telephone}', OBSERVACAO = '${observation}', TIPO = '${type}' WHERE IDFCFO = ${_id}`, (err: Error, rowCount: Number) => {
+        let request = new TediousRequest(`UPDATE COSTUMERS SET NAME = '${name}', ADDRESS = '${address}', TELEPHONE = '${telephone}', OBSERVATION = '${observation}' WHERE ID = ${_id}`, (err: Error, rowCount: Number) => {
             if (err) {
                 return res.status(400).json(err);
             }
@@ -100,7 +102,7 @@ class CostumerController {
     delete(req: Request, res: Response) {
         const { _id } = req.params;
 
-        let request = new TediousRequest(`USE ALTF_ERP DELETE FCFO WHERE IDFCFO = ${_id}`, (err: Error, rowCount: Number) => {
+        let request = new TediousRequest(`DELETE COSTUMERS WHERE ID = ${_id}`, (err: Error, rowCount: Number) => {
             if (err) {
                 return res.status(400).json(err);
             }
